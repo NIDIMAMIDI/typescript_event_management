@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  # MongoDB service (optional if you are using Atlas)
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - '7000:27017' # Map host port 7000 to container port 27017
+    volumes:
+      - mongo:/data/db # Persist data
+
+  # Node.js App service
+  app:
+    build: # Use the build context to build the Dockerfile
+      context: . # Current directory
+      dockerfile: Dockerfile # Dockerfile name
+    ports:
+      - '7007:7777' # Map host port 7007 to container port 7777
+    environment:
+      PORT: 7777
+      DATABASE: mongodb+srv://sharuknidamamidi:Sharu%407981350465@cluster0.bdm0amj.mongodb.net/event_management_ts?retryWrites=true&w=majority # Atlas connection string
+    depends_on:
+      - mongo # Optional: Use if you want to run MongoDB locally as well
+
+volumes:
+  mongo: {} # Volume for MongoDB data persistence
